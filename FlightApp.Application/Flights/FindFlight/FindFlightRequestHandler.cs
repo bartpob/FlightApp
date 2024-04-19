@@ -1,5 +1,6 @@
 ﻿using FlightApp.Application.Abstractions;
 using FlightApp.Application.Flights.DeleteFlight;
+using FlightApp.Domain.Airports;
 using FlightApp.Domain.Flights;
 using FluentValidation;
 using MediatR;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FlightApp.Application.Flights.FindFlight
 {
-    internal class FindFlightRequestHandler(IFlightRepository _flightRepository, IValidator<FindFlightQuery> _validator)
+    internal class FindFlightRequestHandler(IFlightRepository _flightRepository, IValidator<FindFlightQuery> _validator, IAirportRepository airportRepository)
         : IRequestHandler<FindFlightQuery, Result<List<FindFlightResponse>>>
     {
         public async Task<Result<List<FindFlightResponse>>> Handle(FindFlightQuery request, CancellationToken cancellationToken)
@@ -25,18 +26,21 @@ namespace FlightApp.Application.Flights.FindFlight
 
             var flights = await _flightRepository.GetAllAsync();
 
+            var departure = await airportRepository.GetByIataAsync(request.Departure.ToUpper());
+            var destination = await airportRepository.GetByIataAsync(request.Destination.ToUpper());
+
             flights = flights.Where(f => 
-                f.Departure == request.Departure &&
-                f.Destination == request.Destination &&
-                f.FlightDate == request.FlightDate
+                f.Departure == departure &&
+                f.Destination == destination &&
+                f.FlightDate.Date == request.FlightDate.Date
             ).ToList();
 
             var flightsResponse = flights.Select(f => new FindFlightResponse(
                 f.FlightNumber,
-                f.FlightDate,
-                f.Departure,
-                f.Destination,
-                f.AirplaneType
+                f.FlightDate.ToString("dd/MM/yyyy"),
+                AirportResponse.ToAirportResponse(f.Departure),
+                AirportResponse.ToAirportResponse(f.Destination),
+                f.AirplaneType.Airplane
                 )).ToList();
 
             return Result<List<FindFlightResponse>>.Succeeded(flightsResponse);

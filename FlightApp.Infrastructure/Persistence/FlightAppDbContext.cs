@@ -1,4 +1,6 @@
-﻿using FlightApp.Domain.Flights;
+﻿using FlightApp.Domain.AirplaneTypes;
+using FlightApp.Domain.Airports;
+using FlightApp.Domain.Flights;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FlightApp.Infrastructure.Persistence
 {
-    internal class FlightAppDbContext 
+    public class FlightAppDbContext 
         : DbContext
     {
 
@@ -18,5 +20,7 @@ namespace FlightApp.Infrastructure.Persistence
         public FlightAppDbContext() { }
 
         public DbSet<Flight> Flights { get; set; }
+        public DbSet<AirplaneType> AirplaneTypes { get; set; }
+        public DbSet<Airport> Airports { get; set; }
     }
 }

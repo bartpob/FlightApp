@@ -21,10 +21,10 @@ namespace FlightApp.Application.Flights.GetAllFlights
             var flightsResponse = flights.Select(f => new GetAllFlightsQueryReponse(
                  f.Id,
                  f.FlightNumber,
-                 f.FlightDate,
-                 f.Departure,
-                 f.Destination,
-                 f.AirplaneType
+                 f.FlightDate.ToString("dd/MM/yyyy"),
+                 AirportResponse.ToAirportResponse(f.Departure),
+                 AirportResponse.ToAirportResponse(f.Destination),
+                 f.AirplaneType.Airplane
                  )).ToList();
 
             return Result<List<GetAllFlightsQueryReponse>>.Succeeded(flightsResponse);

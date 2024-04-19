@@ -28,12 +28,20 @@ namespace FlightApp.Infrastructure.Persistence.Repositories
 
         public async Task<List<Flight>> GetAllAsync()
         {
-            return await _dbContext.Flights.ToListAsync();
+            return await _dbContext.Flights.
+                Include(f => f.Destination).
+                Include(f => f.Departure).
+                Include(f => f.AirplaneType).
+                ToListAsync();
         }
 
         public async Task<Flight> GetByIdAsync(Guid id)
         {
-            return await _dbContext.Flights.FirstOrDefaultAsync(f => f.Id == id);
+            return (await _dbContext.Flights.
+                Include(f => f.Destination).
+                Include(f => f.Departure).
+                Include(f => f.AirplaneType).
+                FirstOrDefaultAsync(f => f.Id == id))!;
         }
 
         public async Task UpdateAsync(Flight flight)

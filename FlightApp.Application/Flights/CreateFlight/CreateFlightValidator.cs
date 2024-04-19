@@ -1,4 +1,7 @@
-﻿using FluentValidation;
+﻿using FlightApp.Domain.AirplaneTypes;
+using FlightApp.Domain.Airports;
+using FlightApp.Domain.Flights;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,7 @@ namespace FlightApp.Application.Flights.CreateFlight
     internal class CreateFlightValidator
         : AbstractValidator<CreateFlightCommand>
     {
-        public CreateFlightValidator()
+        public CreateFlightValidator(IAirportRepository airportRepository, IAirplaneTypeRepository airplaneTypeRepository)
         {
             RuleFor(flight => flight.FlightNumber).NotNull().NotEmpty();
             RuleFor(flight => flight.Destination).NotNull().NotEmpty();
@@ -22,7 +25,28 @@ namespace FlightApp.Application.Flights.CreateFlight
             RuleFor(flight => flight.Departure).NotEqual(flight => flight.Destination);
             RuleFor(flight => flight.Destination).NotEqual(flight => flight.Departure);
 
-            RuleFor(flight => flight.FlightDate).GreaterThan(DateTime.UtcNow);
+            RuleFor(flight => flight.FlightDate.Date).GreaterThanOrEqualTo(DateTime.UtcNow.Date);
+
+            RuleFor(flight => flight.Departure).MustAsync(async (iata, Cancellation) =>
+            {
+                var airport = await airportRepository.GetByIataAsync(iata.ToUpper());
+                return airport != null;
+            }).WithErrorCode("NOT_EXISTS")
+             .WithMessage("Given iata code doesn't exist");
+
+            RuleFor(flight => flight.Destination).MustAsync(async (iata, Cancellation) =>
+            {
+                var airport = await airportRepository.GetByIataAsync(iata.ToUpper());
+                return airport != null;
+            }).WithErrorCode("NOT_EXISTS")
+             .WithMessage("Given iata code doesn't exist");
+
+            RuleFor(flight => flight.AirplaneType).MustAsync(async (type, Cancellation) =>
+            {
+                var airplane = await airplaneTypeRepository.GetByAirplaneNameAsync(type.ToUpper());
+                return airplane != null;
+            }).WithErrorCode("NOT_EXISTS")
+             .WithMessage("Given airplane type doesn't exist");
         }
     }
 }
