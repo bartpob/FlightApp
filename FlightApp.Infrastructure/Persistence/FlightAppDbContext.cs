@@ -1,6 +1,7 @@
 ﻿using FlightApp.Domain.AirplaneTypes;
 using FlightApp.Domain.Airports;
 using FlightApp.Domain.Flights;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,8 @@ using System.Threading.Tasks;
 
 namespace FlightApp.Infrastructure.Persistence
 {
-    public class FlightAppDbContext 
-        : DbContext
+    public partial class FlightAppDbContext 
+        : IdentityDbContext
     {
 
         public FlightAppDbContext(DbContextOptions<FlightAppDbContext> options) 
