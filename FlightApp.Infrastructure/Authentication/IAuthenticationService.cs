@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FlightApp.Infrastructure.Authentication
 {
-    internal interface IAuthenticationService
+    public interface IAuthenticationService
     {
         public Task<string> GenerateTokenAsync(IdentityUser user);
     }

@@ -25,4 +25,10 @@
     <ProjectReference Include="..\FlightApp.Application\FlightApp.Application.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+			<_Parameter1>FlightApp.Infrastructure.UnitTests</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
 </Project>
