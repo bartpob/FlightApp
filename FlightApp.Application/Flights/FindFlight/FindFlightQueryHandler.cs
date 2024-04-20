@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FlightApp.Application.Flights.FindFlight
 {
-    internal class FindFlightRequestHandler(IFlightRepository _flightRepository, IValidator<FindFlightQuery> _validator, IAirportRepository airportRepository)
+    internal class FindFlightQueryHandler(IFlightRepository _flightRepository, IValidator<FindFlightQuery> _validator, IAirportRepository airportRepository)
         : IRequestHandler<FindFlightQuery, Result<List<FindFlightResponse>>>
     {
         public async Task<Result<List<FindFlightResponse>>> Handle(FindFlightQuery request, CancellationToken cancellationToken)

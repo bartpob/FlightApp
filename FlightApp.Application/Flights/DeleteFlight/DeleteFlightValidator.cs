@@ -13,7 +13,7 @@ namespace FlightApp.Application.Flights.DeleteFlight
     {
         public DeleteFlightValidator(IFlightRepository flightRepository)
         {
-            RuleFor(flight => flight.Id).MustAsync(async (id, Cancellation) =>
+            RuleFor(flight => flight.Id).NotNull().NotEmpty().MustAsync(async (id, Cancellation) =>
             {
                 var flight = await flightRepository.GetByIdAsync(id);
                 return flight != null;
