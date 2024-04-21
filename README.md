@@ -34,7 +34,7 @@ To showcase my familiarity with EntityFramework, I used an InMemoryDatabase. Thi
 
 The CQRS pattern separates read (queries) from write (commands) operations. Commands mutate the system state, while queries retrieve data. This separation enables optimization and scalability. I used the MediatR package for implementation that pattern.
 
-## Unit Testing
+## Unit Tests
 
 I ensured tests for both the application and infrastructure layers. In the application layer, each command, query, and validator has multiple tests. In the infrastructure layer, I provided tests for logging mechanisms and repositories.
 I used Moq library to mocking required services in test scenarios.
